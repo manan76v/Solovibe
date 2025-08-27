@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoleVibe - Modern Footwear</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 overflow-x-hidden">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/>
+                        </svg>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">SoleVibe</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <span class="nav-item text-gray-700 hover:text-purple-600 px-3 py-2 font-medium active" onclick="showPage('home')">Home</span>
+                    <span class="nav-item text-gray-700 hover:text-purple-600 px-3 py-2 font-medium" onclick="showPage('collection')">Collection</span>
+                    <span class="nav-item text-gray-700 hover:text-purple-600 px-3 py-2 font-medium" onclick="showPage('about')">About</span>
+                    <span class="nav-item text-gray-700 hover:text-purple-600 px-3 py-2 font-medium" onclick="showPage('contact')">Contact</span>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-600 hover:text-purple-600 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </button>
+                    <button id="cart-toggle" class="p-2 text-gray-600 hover:text-purple-600 transition-colors relative group">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M4.5 5H19.5L18 15H6L4.5 5Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8.5 19C9.32843 19 10 18.3284 10 17.5C10 16.6716 9.32843 16 8.5 16C7.67157 16 7 16.6716 7 17.5C7 18.3284 7.67157 19 8.5 19Z" stroke-width="1.8"/>
+                            <path d="M15.5 19C16.3284 19 17 18.3284 17 17.5C17 16.6716 16.3284 16 15.5 16C14.6716 16 14 16.6716 14 17.5C14 18.3284 14.6716 19 15.5 19Z" stroke-width="1.8"/>
+                            <path d="M5 5L7 2H10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span id="cart-count" class="absolute -top-2 -right-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-medium rounded-full w-5 h-5 flex items-center justify-center transform group-hover:scale-110 transition-transform">0</span>
+                    </button>
+                    <button id="mobile-menu-toggle" class="md:hidden p-2 text-gray-600 hover:text-purple-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div id="mobile-menu" class="mobile-menu md:hidden bg-white border-t border-gray-200 absolute w-full">
+            <div class="px-4 py-2 space-y-1">
+                <span class="block nav-item text-gray-700 hover:text-purple-600 px-3 py-2 font-medium active" onclick="showPage('home')">Home</span>
+                <span class="block nav-item text-gray-700 hover:text-purple-600 px-3 py-2 font-medium" onclick="showPage('collection')">Collection</span>
+                <span class="block nav-item text-gray-700 hover:text-purple-600 px-3 py-2 font-medium" onclick="showPage('about')">About</span>
+                <span class="block nav-item text-gray-700 hover:text-purple-600 px-3 py-2 font-medium" onclick="showPage('contact')">Contact</span>
+            </div>
+        </div>
+    </nav>
+
+    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden"></div>
+    <div id="cart-sidebar" class="cart-sidebar fixed right-0 top-0 h-full w-96 bg-white shadow-2xl z-50 flex flex-col">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold text-gray-900">Shopping Cart</h2>
+                <button id="close-cart" class="p-2 hover:bg-gray-100 rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6">
+            <div class="text-center text-gray-500 py-8">
+                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"/>
+                </svg>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        
+        <div id="cart-footer" class="p-6 border-t border-gray-200 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-lg font-semibold">Total:</span>
+                <span id="cart-total" class="text-2xl font-bold text-purple-600">$0</span>
+            </div>
+            <button class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition-all">
+                Checkout
+            </button>
+        </div>
+    </div>
+
+   
+    <div id="home-page" class="page active">
+       
+        <section class="gradient-bg min-h-screen flex items-center relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute top-20 left-10 w-32 h-32 bg-white rounded-full floating"></div>
+                <div class="absolute top-40 right-20 w-20 h-20 bg-white rounded-full floating" style="animation-delay: -1s;"></div>
+                <div class="absolute bottom-20 left-1/4 w-16 h-16 bg-white rounded-full floating" style="animation-delay: -2s;"></div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
+                <div class="text-white slide-in">
+                    <h1 class="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+                        Step Into
+                        <span class="block bg-gradient-to-r from-yellow-400 to-pink-400 bg-clip-text text-transparent">
+                            The Future
+                        </span>
+                    </h1>
+                    <p class="text-xl mb-8 text-purple-100 leading-relaxed">
+                        Discover our revolutionary collection of premium footwear designed for the modern lifestyle. Comfort meets style in every step.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="showPage('collection')" class="bg-white text-purple-600 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 pulse-glow">
+                            Shop Collection
+                        </button>
+                        <button onclick="showPage('about')" class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition-all transform hover:scale-105">
+                            Our Story
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    
+                    <div class="hero-shoe-container relative bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl">
+                        <div class="shoe-slider-wrapper overflow-hidden rounded-2xl">
+                            <div id="hero-shoe-slider" class="flex transition-transform duration-700 ease-in-out">
+                               
+                            </div>
+                        </div>
+                        
+                     
+                        <button id="prev-slide" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-opacity-30 transition-all z-10">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                        </button>
+                        <button id="next-slide" class="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-opacity-30 transition-all z-10">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                        
+                        
+                        <div id="slide-indicators" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+                            
+                        </div>
+                        
+                        
+                        <button id="toggle-3d" class="absolute top-4 right-4 bg-white bg-opacity-20 backdrop-blur-sm text-white px-4 py-2 rounded-full font-medium hover:bg-opacity-30 transition-all z-10">
+                            <span class="flex items-center space-x-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4a1 1 0 011-1h4m0 0V1m0 2h2m0 0V1m0 2h2m0 0V1m0 2h4a1 1 0 011 1v4m0 0h2m-2 0v2m0 0h2m-2 0v2m0 0h2m-2 0v4a1 1 0 01-1 1h-4m0 0v2m0-2h-2m0 0v2m0-2h-2m0 0v2m0-2H4a1 1 0 01-1-1v-4m0 0H1m2 0v-2m0 0H1m2 0V8m0 0H1"/>
+                                </svg>
+                                <span>3D View</span>
+                            </span>
+                        </button>
+                    </div>
+                    
+                    
+                    <div class="absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 text-white text-center min-w-80 shadow-xl">
+                        <h3 id="current-shoe-name" class="text-xl font-bold mb-2">Nike Air Max 270</h3>
+                        <p id="current-shoe-price" class="text-lg font-semibold mb-3">$150</p>
+                        <div class="flex justify-center space-x-2 mb-4">
+                            <div id="current-shoe-colors" class="flex space-x-2">
+                                
+                            </div>
+                        </div>
+                        <button class="bg-white text-purple-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-all transform hover:scale-105">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Featured Collection</h2>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto">Handpicked shoes that combine cutting-edge design with unmatched comfort</p>
+                </div>
+                
+               
+                <div id="loading" class="text-center py-12">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+                    <p class="mt-4 text-gray-600">Loading amazing shoes...</p>
+                </div>
+                
+               
+                <div id="products-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 hidden">
+                    
+                </div>
+                
+               
+                <div class="text-center mt-12">
+                    <button id="load-more" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg hidden">
+                        Load More Shoes
+                    </button>
+                </div>
+            </div>
+        </section>
+
+       
+        <section class="py-20 bg-gradient-to-br from-purple-50 to-pink-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Trending Now</h2>
+                    <p class="text-xl text-gray-600">The hottest shoes everyone's talking about</p>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                   
+                    <div class="relative">
+                        <div class="bg-white rounded-3xl p-8 shadow-2xl">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                                    <span class="text-sm font-semibold text-red-500 uppercase tracking-wide">Hot Seller</span>
+                                </div>
+                                <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                                    🔥 #1 Trending
+                                </div>
+                            </div>
+                            
+                            <div class="relative mb-6 overflow-hidden rounded-2xl">
+                                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&h=300&fit=crop&crop=center" alt="Trending Shoe" class="w-full h-64 object-cover bg-gradient-to-br from-gray-50 to-gray-100">
+                                <div class="absolute top-4 right-4 bg-white bg-opacity-90 backdrop-blur-sm px-3 py-1 rounded-full">
+                                    <span class="text-sm font-bold text-purple-600">Limited Edition</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900">Nike Air Max 270 React</h3>
+                                    <p class="text-gray-600">The perfect fusion of style and performance</p>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-3xl font-bold text-purple-600">$165</span>
+                                        <span class="text-lg text-gray-400 line-through">$200</span>
+                                        <span class="bg-red-100 text-red-600 px-2 py-1 rounded-full text-sm font-semibold">-18%</span>
+                                    </div>
+                                    <div class="flex items-center space-x-1">
+                                        <div class="flex text-yellow-400">
+                                            ⭐⭐⭐⭐⭐
+                                        </div>
+                                        <span class="text-sm text-gray-500">(2,847 reviews)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between pt-4">
+                                    <div class="flex space-x-2">
+                                        <div class="w-8 h-8 bg-black rounded-full border-2 border-gray-300"></div>
+                                        <div class="w-8 h-8 bg-white rounded-full border-2 border-gray-300"></div>
+                                        <div class="w-8 h-8 bg-blue-500 rounded-full border-2 border-gray-300"></div>
+                                        <div class="w-8 h-8 bg-red-500 rounded-full border-2 border-gray-300"></div>
+                                    </div>
+                                    <button class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105" onclick="addToCart(1)">
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-20 animate-pulse"></div>
+                        <div class="absolute -bottom-6 -left-6 w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
+                    </div>
+                    
+                   
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-3xl font-bold text-gray-900 mb-6">Why It's Trending</h3>
+                            <div class="space-y-6">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-gray-900">Revolutionary Comfort</h4>
+                                        <p class="text-gray-600">Advanced React foam technology provides unmatched energy return</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-gray-900">Celebrity Endorsed</h4>
+                                        <p class="text-gray-600">Worn by top athletes and influencers worldwide</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-pink-500 to-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-gray-900">Limited Availability</h4>
+                                        <p class="text-gray-600">Only 500 pairs left in this exclusive colorway</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                      
+                        <div class="bg-white rounded-2xl p-6 shadow-lg">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">Live Activity</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-600">Sold in last 24h</span>
+                                    <span class="font-bold text-green-600">127 pairs</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-600">People viewing now</span>
+                                    <span class="font-bold text-orange-600">43 people</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-600">Stock remaining</span>
+                                    <span class="font-bold text-red-600">Only 12 left!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+     
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
+                    <p class="text-xl text-gray-600">Real reviews from real shoe lovers</p>
+                    <div class="flex items-center justify-center mt-6 space-x-2">
+                        <div class="flex text-yellow-400 text-2xl">⭐⭐⭐⭐⭐</div>
+                        <span class="text-lg font-semibold text-gray-700">4.8/5 from 15,000+ reviews</span>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8 mb-12">
+                   
+                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
+                        <div class="flex items-center mb-6">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" alt="Sarah M." class="w-12 h-12 rounded-full object-cover">
+                            <div class="ml-4">
+                                <h4 class="font-semibold text-gray-900">Sarah M.</h4>
+                                <div class="flex text-yellow-400">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        <blockquote class="text-gray-700 mb-4 italic">
+                            "These are hands down the most comfortable shoes I've ever owned! Perfect for my daily runs and they look amazing with any outfit."
+                        </blockquote>
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span>Verified Purchase</span>
+                            <span>Nike Air Max 270</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
+                        <div class="flex items-center mb-6">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face" alt="Mike R." class="w-12 h-12 rounded-full object-cover">
+                            <div class="ml-4">
+                                <h4 class="font-semibold text-gray-900">Mike R.</h4>
+                                <div class="flex text-yellow-400">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        <blockquote class="text-gray-700 mb-4 italic">
+                            "Fast shipping, excellent quality, and the customer service is top-notch. SoleVibe has become my go-to for all my sneaker needs!"
+                        </blockquote>
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span>Verified Purchase</span>
+                            <span>Jordan 1 Retro</span>
+                        </div>
+                    </div>
+                    
+                   
+                    <div class="bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
+                        <div class="flex items-center mb-6">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" alt="Emma L." class="w-12 h-12 rounded-full object-cover">
+                            <div class="ml-4">
+                                <h4 class="font-semibold text-gray-900">Emma L.</h4>
+                                <div class="flex text-yellow-400">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        <blockquote class="text-gray-700 mb-4 italic">
+                            "Love the variety and quality! The sizing guide was spot-on, and I get compliments on my new Adidas everywhere I go."
+                        </blockquote>
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span>Verified Purchase</span>
+                            <span>Adidas Ultraboost</span>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="bg-gray-50 rounded-3xl p-8">
+                    <div class="grid md:grid-cols-5 gap-8 text-center">
+                        <div>
+                            <div class="text-3xl font-bold text-purple-600 mb-2">98%</div>
+                            <div class="text-gray-600">Customer Satisfaction</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-green-600 mb-2">4.8★</div>
+                            <div class="text-gray-600">Average Rating</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-blue-600 mb-2">15K+</div>
+                            <div class="text-gray-600">Happy Customers</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-orange-600 mb-2">24h</div>
+                            <div class="text-gray-600">Fast Shipping</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-pink-600 mb-2">30d</div>
+                            <div class="text-gray-600">Easy Returns</div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="text-center mt-12">
+                    <button onclick="showPage('collection')" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg">
+                        Shop Now & Join Happy Customers
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="py-20 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Why Choose SoleVibe?</h2>
+                    <p class="text-xl text-gray-600">Experience the difference with our innovative features</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Premium Quality</h3>
+                        <p class="text-gray-600">Crafted with the finest materials and attention to detail for lasting durability</p>
+                    </div>
+                    
+                    <div class="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Perfect Fit</h3>
+                        <p class="text-gray-600">Advanced sizing technology ensures the perfect fit for every foot shape</p>
+                    </div>
+                    
+                    <div class="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Comfort First</h3>
+                        <p class="text-gray-600">Innovative cushioning and support systems for all-day comfort</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    
+    <div id="collection-page" class="page">
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h1 class="text-5xl font-bold text-gray-900 mb-4">Our Collection</h1>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto">Explore our complete range of premium footwear designed for every lifestyle</p>
+                </div>
+                
+                
+                <div class="mb-12 space-y-6">
+                    
+                    <div class="flex justify-center">
+                        <div class="relative w-full max-w-md">
+                            <input type="text" id="search-input" placeholder="Search shoes..." class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <button class="filter-button active px-6 py-2 rounded-full border border-gray-300 hover:border-purple-500 transition-all" data-filter="all">All</button>
+                        <button class="filter-button px-6 py-2 rounded-full border border-gray-300 hover:border-purple-500 transition-all" data-filter="nike">Nike</button>
+                        <button class="filter-button px-6 py-2 rounded-full border border-gray-300 hover:border-purple-500 transition-all" data-filter="adidas">Adidas</button>
+                        <button class="filter-button px-6 py-2 rounded-full border border-gray-300 hover:border-purple-500 transition-all" data-filter="jordan">Jordan</button>
+                        <button class="filter-button px-6 py-2 rounded-full border border-gray-300 hover:border-purple-500 transition-all" data-filter="running">Running</button>
+                        <button class="filter-button px-6 py-2 rounded-full border border-gray-300 hover:border-purple-500 transition-all" data-filter="lifestyle">Lifestyle</button>
+                        <button class="filter-button px-6 py-2 rounded-full border border-gray-300 hover:border-purple-500 transition-all" data-filter="casual">Casual</button>
+                    </div>
+                    
+                    
+                    <div class="flex justify-center">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Price Range: $<span id="price-value">0</span> - $300</label>
+                            <input type="range" id="price-range" min="0" max="300" value="300" class="w-64">
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div id="collection-grid" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    
+                </div>
+                
+                
+                <div id="no-results" class="text-center py-12 hidden">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.467-.881-6.08-2.33"/>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-600 mb-2">No shoes found</h3>
+                    <p class="text-gray-500">Try adjusting your filters or search terms</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    
+    <div id="about-page" class="page">
+        
+        <section class="gradient-bg py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-5xl font-bold text-white mb-6">About SoleVibe</h1>
+                <p class="text-xl text-purple-100 max-w-3xl mx-auto">We're passionate about creating footwear that doesn't just look good, but feels incredible and lasts for years to come.</p>
+            </div>
+        </section>
+        
+        
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="text-4xl font-bold text-gray-900 mb-6">Our Story</h2>
+                        <p class="text-lg text-gray-600 mb-6">Founded in 2020, SoleVibe emerged from a simple belief: everyone deserves shoes that combine style, comfort, and sustainability. Our journey began when our founders, frustrated with the lack of truly comfortable yet stylish footwear, decided to create their own.</p>
+                        <p class="text-lg text-gray-600 mb-6">Today, we work with the world's leading brands and innovative designers to curate a collection that meets the highest standards of quality and design. Every shoe in our collection is carefully selected for its craftsmanship, comfort, and style.</p>
+                        <div class="grid grid-cols-3 gap-6 mt-8">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-purple-600">50K+</div>
+                                <div class="text-gray-600">Happy Customers</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-purple-600">200+</div>
+                                <div class="text-gray-600">Shoe Models</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-purple-600">15+</div>
+                                <div class="text-gray-600">Brand Partners</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=400&fit=crop&crop=center" alt="Our Story" class="rounded-2xl shadow-2xl">
+                        <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl opacity-20"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Values Section -->
+        <section class="py-20 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Our Values</h2>
+                    <p class="text-xl text-gray-600">The principles that guide everything we do</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center p-8 bg-white rounded-2xl shadow-lg">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Quality First</h3>
+                        <p class="text-gray-600">We never compromise on quality. Every shoe is crafted with premium materials and attention to detail.</p>
+                    </div>
+                    
+                    <div class="text-center p-8 bg-white rounded-2xl shadow-lg">
+                        <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Sustainability</h3>
+                        <p class="text-gray-600">We're committed to sustainable practices and work with brands that share our environmental values.</p>
+                    </div>
+                    
+                    <div class="text-center p-8 bg-white rounded-2xl shadow-lg">
+                        <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Customer Focus</h3>
+                        <p class="text-gray-600">Our customers are at the heart of everything we do. Your satisfaction is our top priority.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Team Section -->
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Meet Our Team</h2>
+                    <p class="text-xl text-gray-600">The passionate people behind SoleVibe</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="team-card text-center p-6 bg-gray-50 rounded-2xl">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" alt="Alex Johnson" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Alex Johnson</h3>
+                        <p class="text-purple-600 font-medium mb-3">CEO & Founder</p>
+                        <p class="text-gray-600">Passionate about footwear innovation and sustainable business practices.</p>
+                    </div>
+                    
+                    <div class="team-card text-center p-6 bg-gray-50 rounded-2xl">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" alt="Sarah Chen" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Sarah Chen</h3>
+                        <p class="text-purple-600 font-medium mb-3">Head of Design</p>
+                        <p class="text-gray-600">Expert in footwear design with 10+ years of experience in the industry.</p>
+                    </div>
+                    
+                    <div class="team-card text-center p-6 bg-gray-50 rounded-2xl">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" alt="Mike Rodriguez" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Mike Rodriguez</h3>
+                        <p class="text-purple-600 font-medium mb-3">Head of Operations</p>
+                        <p class="text-gray-600">Ensures every shoe meets our quality standards and reaches customers on time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+   
+    <div id="contact-page" class="page">
+       
+        <section class="gradient-bg py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-5xl font-bold text-white mb-6">Get In Touch</h1>
+                <p class="text-xl text-purple-100 max-w-3xl mx-auto">Have questions about our shoes or need help with your order? We'd love to hear from you!</p>
+            </div>
+        </section>
+        
+       
+        
+        
+        
+        <section class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-12">
+                  
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-6">Send us a message</h2>
+                        <form id="contact-form" class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="first-name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                    <input type="text" id="first-name" name="first-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="last-name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                    <input type="text" id="last-name" name="last-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                                <select id="subject" name="subject" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="">Select a subject</option>
+                                    <option value="general">General Inquiry</option>
+                                    <option value="order">Order Support</option>
+                                    <option value="returns">Returns & Exchanges</option>
+                                    <option value="sizing">Sizing Help</option>
+                                    <option value="partnership">Partnership</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                <textarea id="message" name="message" rows="6" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Tell us how we can help you..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                    
+                    
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-6">Contact Information</h2>
+                        
+                        <div class="space-y-6 mb-8">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Address</h3>
+                                    <p class="text-gray-600">Shop #123, Blue Area<br>F-6, Islamabad<br>Pakistan</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Phone</h3>
+                                    <p class="text-gray-600">+92 51 1234567</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Email</h3>
+                                    <p class="text-gray-600">hello@solevibe.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Business Hours</h3>
+                                    <p class="text-gray-600">Monday - Saturday: 10:00 AM - 10:00 PM<br>Friday: 2:30 PM - 10:00 PM<br>Sunday: 11:00 AM - 9:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                       
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="py-12 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900">Visit Our Store</h2>
+                    <p class="text-xl text-gray-600 mt-2">Find us in the heart of Islamabad</p>
+                </div>
+                <div class="w-full h-[400px] rounded-xl overflow-hidden shadow-lg">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3321.308467675371!2d73.0912223!3d33.6518264!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38dfea4aee5bdf8f%3A0xe6b55e05d462beb1!2sBlue%20Area%2C%20Islamabad%2C%20Pakistan!5e0!3m2!1sen!2s!4v1629838456789!5m2!1sen!2s"
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+                <div class="mt-8 text-center">
+                    <p class="text-gray-600">
+                        <strong>Store Address:</strong> Shop #123, Blue Area, F-6, Islamabad, Pakistan<br>
+                        <strong>Phone:</strong> +92 51 1234567
+                    </p>
+                    <p class="text-gray-600 mt-2">
+                        <strong>Hours:</strong> Mon-Sat 10AM-10PM | Friday 2:30PM-10PM | Sun 11AM-9PM
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    
+    <div id="chatbot-container" class="fixed bottom-6 right-6 z-50">
+        
+        <button id="chat-toggle" class="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-2xl flex items-center justify-center text-white hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-110 pulse-glow">
+            <svg id="chat-icon" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+            <svg id="close-icon" class="w-8 h-8 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+        
+        
+        <div id="chat-notification" class="absolute -top-16 -right-1 w-5 h-5 bg-gradient-to-r from-pink-500 to-red-500 rounded-full flex items-center justify-center text-white text-xs font-semibold shadow-lg transform scale-100 transition-transform duration-200 animate-bounce hidden">
+            1
+        </div>
+        
+        
+        <div id="chat-window" class="absolute bottom-20 right-0 w-96 h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 hidden overflow-hidden">
+            
+            <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-4 text-white">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">SoleVibe Assistant</h3>
+                        <div class="flex items-center space-x-1">
+                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span class="text-sm opacity-90">Online</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div id="chat-messages" class="flex-1 p-4 space-y-4 overflow-y-auto h-80 bg-gray-50">
+                <!-- Welcome message -->
+                <div class="flex items-start space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/>
+                        </svg>
+                    </div>
+                    <div class="bg-white rounded-2xl rounded-tl-md p-3 shadow-sm max-w-xs">
+                        <p class="text-gray-800">👋 Hi! I'm your SoleVibe assistant. I can help you find the perfect shoes, check sizes, or answer any questions!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div id="quick-actions" class="p-3 border-t border-gray-200 bg-white">
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <button class="quick-action-btn px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm hover:bg-purple-200 transition-colors" data-message="Show me running shoes">
+                        🏃‍♂️ Running Shoes
+                    </button>
+                    <button class="quick-action-btn px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm hover:bg-purple-200 transition-colors" data-message="What's trending?">
+                        🔥 Trending
+                    </button>
+                    <button class="quick-action-btn px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm hover:bg-purple-200 transition-colors" data-message="Help with sizing">
+                        📏 Size Guide
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Chat Input -->
+            <div class="p-4 border-t border-gray-200 bg-white">
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <button id="send-message" class="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white hover:from-purple-700 hover:to-pink-700 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Typing Indicator -->
+            <div id="typing-indicator" class="hidden p-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/>
+                        </svg>
+                    </div>
+                    <div class="bg-white rounded-2xl p-3 shadow-sm">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-6">
+                        <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/>
+                            </svg>
+                        </div>
+                        <span class="text-2xl font-bold">SoleVibe</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">Step into the future with our premium footwear collection designed for the modern lifestyle.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-purple-600 transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-purple-600 transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-purple-600 transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001.012.001z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><span class="text-gray-400 hover:text-white transition-colors cursor-pointer" onclick="showPage('home')">Home</span></li>
+                        <li><span class="text-gray-400 hover:text-white transition-colors cursor-pointer" onclick="showPage('collection')">Collection</span></li>
+                        <li><span class="text-gray-400 hover:text-white transition-colors cursor-pointer" onclick="showPage('about')">About Us</span></li>
+                        <li><span class="text-gray-400 hover:text-white transition-colors cursor-pointer" onclick="showPage('contact')">Contact</span></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Categories</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Running</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Lifestyle</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Sports</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Limited Edition</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Subscribe to get updates on new releases and exclusive offers.</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input type="email" placeholder="Enter your email" class="w-full sm:flex-1 px-4 py-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 border border-gray-700">
+                        <button class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 font-semibold shadow-lg">
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2024 SoleVibe. All rights reserved. Made with ❤️ for shoe lovers.</p>
+            </div>
+        </div>
+    </footer>
+   <script src="script.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9707fb4a365d815b',t:'MTc1NTQyMTIzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
